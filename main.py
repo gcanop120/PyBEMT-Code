@@ -7,12 +7,11 @@
 
 # Required Libraries
 from utils.preprocessing import hydrofoils_data_check
-from utils.preprocessing import hydrofoils_keys_check
+from utils.extrapolation import create_polars
 
 # ======================================== PART 1: HYDROFOIL DATA CHECK ============================================================
 HYDROFOILS_FOLDER_NAME = "hydrofoils"  # Folder name where the hydrofoil data is stored.
 [absolute_path, files] = hydrofoils_data_check(path=HYDROFOILS_FOLDER_NAME)  # Check if the hydrofoil data is correctly stored.
-hydrofoils_keys_check(files=files, path=absolute_path)  # Check if the hydrofoil data files contain the correct keys.
 
 # ======================================== PART 2: AIRFOIL DATA EXTRAPOLATION ======================================================
-
+[hydrofoils, polars, airfoils] = create_polars(files=files, path=absolute_path)  # Create hydrofoils, polars and airfoils objects.
