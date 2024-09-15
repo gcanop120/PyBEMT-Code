@@ -21,7 +21,7 @@ def hydrofoils_data_check(path: str):
         print(f"Hydrofoils Data Files: {files}")
 
         # Check if the hydrofoil data files have the correct keys.
-        keys = ['alpha', 'cl', 'cd', 'efficiency', 'hydrofoil', 'reynolds', 'source']
+        keys = ['alpha', 'cl', 'cd', 'cm', 'efficiency', 'hydrofoil', 'reynolds', 'source']
         for file in files:
             with open(os.path.join(path, file), 'r') as stream:
                 try:
