@@ -49,3 +49,13 @@ def extrapolate_airfoil_data(airfoils: dict):
         airfoil_extrapolated = airfoils[airfoil].extrapolate(AR=aspect_ratio, cdmax=cd_max, cdmin=cd_min)
         airfoils_extrapolated[airfoil] = airfoil_extrapolated
     return airfoils_extrapolated
+
+
+def save_aerodyn_files(hydrofoils_extrapolated: dict):
+    """
+    Function to save the extrapolated hydrofoil data into a new file.
+    :param hydrofoils_extrapolated: dictionary of extrapolated hydrofoil data.
+    :return: None
+    """
+    for hydrofoil, airfoil in hydrofoils_extrapolated.items():
+        hydrofoils_extrapolated[hydrofoil].writeToAerodynFile(hydrofoil + '.dat')

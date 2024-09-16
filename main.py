@@ -9,6 +9,7 @@
 from utils.preprocessing import hydrofoils_data_check
 from utils.extrapolation import create_objects
 from utils.extrapolation import extrapolate_airfoil_data
+from utils.extrapolation import save_aerodyn_files
 
 # ======================================== PART 1: HYDROFOIL DATA CHECK =================================================================
 HYDROFOILS_FOLDER_NAME = "hydrofoils"  # Folder name where the hydrofoil data is stored.
@@ -17,3 +18,5 @@ HYDROFOILS_FOLDER_NAME = "hydrofoils"  # Folder name where the hydrofoil data is
 # ================================ PART 2: HYDROFOIL DATA CORRECTION AND EXTRAPOLATION ===================================================
 [hydrofoils, polars_obj, airfoils_obj] = create_objects(files=files, path=absolute_path)  # Create hydrofoils, polars and airfoils objects.
 hydrofoils_extrapolated = extrapolate_airfoil_data(airfoils=airfoils_obj)  # Extrapolate the hydrofoil data.
+save_aerodyn_files(hydrofoils_extrapolated=hydrofoils_extrapolated)  # Save the extrapolated hydrofoil data into a new file.
+                                                
