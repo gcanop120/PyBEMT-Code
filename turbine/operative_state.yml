@@ -5,3 +5,5 @@ operating_reynolds: 298000
 optimal_speed: 1.5
 rpm: 143.239
 tip_speed_ratio: 5.0
+no_design_stations: 8
+initial_stage_pctg: 0.3

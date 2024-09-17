@@ -37,8 +37,8 @@ def create_objects(files: str, path: str):
 def extrapolate_airfoil_data(airfoils: dict):
     """
     Function to extrapolate the airfoil data by using the AirfoilPrepPy library.
-    :param airfoils:
-    :return:
+    :param airfoils: dictionary of airfoil objects created from the hydrofoil data.
+    :return: dictionary of extrapolated airfoil data.
     """
     airfoils_extrapolated = {}
     for airfoil, properties in airfoils.items():
@@ -55,7 +55,7 @@ def save_aerodyn_files(hydrofoils_extrapolated: dict):
     """
     Function to save the extrapolated hydrofoil data into a new file.
     :param hydrofoils_extrapolated: dictionary of extrapolated hydrofoil data.
-    :return: None
+    :return: None. The function saves the extrapolated hydrofoil data into a new file.
     """
     for hydrofoil, airfoil in hydrofoils_extrapolated.items():
         hydrofoils_extrapolated[hydrofoil].writeToAerodynFile(hydrofoil + '.dat')
