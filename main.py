@@ -12,10 +12,11 @@ from utils.preprocessing import operative_state_data_check
 from utils.extrapolation import create_objects
 from utils.extrapolation import extrapolate_airfoil_data
 from utils.extrapolation import save_aerodyn_files
-from utils.bemt_design import optimal_chord_twist
+from utils.bemt_blade_design import optimal_blade_chord_twist
 
 # ======================================== PART 1: HYDROFOIL DATA CHECK ================================================================================
 HYDROFOILS_FOLDER_NAME = "hydrofoils"                           # Folder name where the hydrofoil data is stored.
+HYDROFOILS_EXT_FOLDER_NAME = "hydrofoils_ext"                   # Folder name where the extrapolated hydrofoil data will be stored.
 PATH_FLUID_PROPERTIES = "turbine/fluid_properties.yml"          # Path to the fluid properties file.
 PATH_OPERATIVE_STATE = "turbine/operative_state.yml"            # Path to the operative state file.
 
@@ -27,11 +28,12 @@ operative_state = operative_state_data_check(relative_path=PATH_OPERATIVE_STATE)
 [hydrofoils, polars_obj, airfoils_obj] = create_objects(files=files, path=absolute_path_hydrofoils)  # Create hydrofoils, polars and airfoils objects.
 
 # ================================= PART 2A: BLADE CHORD AND TWIST DESIGN ==============================================================================
-[optimal_chord, optimal_twist] = optimal_chord_twist(hydrofoils=hydrofoils)
+optimal_chord = optimal_blade_chord_twist(hydrofoils=hydrofoils, fluid_properties=fluid_properties, operative_state=operative_state)
 
 # ================================= PART 2B: AIRFOIL DATA EXTRAPOLATION ================================================================================
-hydrofoils_extrapolated = extrapolate_airfoil_data(airfoils=airfoils_obj)           # Extrapolate the hydrofoil data.
-save_aerodyn_files(hydrofoils_extrapolated=hydrofoils_extrapolated)                 # Save the extrapolated hydrofoil data into a new file.
+hydrofoils_extrapolated = extrapolate_airfoil_data(airfoils=airfoils_obj)                                     # Extrapolate the hydrofoil data.
+save_aerodyn_files(hydrofoils_extrapolated=hydrofoils_extrapolated, folder_name=HYDROFOILS_EXT_FOLDER_NAME)   # Save the extrapolated hydrofoil data.
+
 
 
                                                 

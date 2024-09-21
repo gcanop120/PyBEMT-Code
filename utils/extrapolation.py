@@ -51,11 +51,16 @@ def extrapolate_airfoil_data(airfoils: dict):
     return airfoils_extrapolated
 
 
-def save_aerodyn_files(hydrofoils_extrapolated: dict):
+def save_aerodyn_files(hydrofoils_extrapolated: dict, folder_name: str):
     """
     Function to save the extrapolated hydrofoil data into a new file.
     :param hydrofoils_extrapolated: dictionary of extrapolated hydrofoil data.
+    :param folder_name: name of the folder where the extrapolated hydrofoil data will be stored.
     :return: None. The function saves the extrapolated hydrofoil data into a new file.
     """
     for hydrofoil, airfoil in hydrofoils_extrapolated.items():
-        hydrofoils_extrapolated[hydrofoil].writeToAerodynFile(hydrofoil + '.dat')
+        disk = os.path.splitdrive(os.getcwd())[0]
+        main_folder = "\\PyBEMT Code"
+        folder_name = os.path.join(disk, os.path.join(main_folder, folder_name))
+        hydrofoils_extrapolated[hydrofoil].writeToAerodynFile(os.path.join(folder_name, f"{hydrofoil}.dat"))
+    return None

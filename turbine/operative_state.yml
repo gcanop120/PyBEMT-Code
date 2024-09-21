@@ -1,5 +1,7 @@
 angular_speed: 15
 blade_radius: 0.5
+no_blades: 3
+radius_hub: 0.10
 chord_reference: 0.0474
 operating_reynolds: 298000
 optimal_speed: 1.5

@@ -73,8 +73,8 @@ def operative_state_data_check(relative_path: str):
         print(f"Path: {relative_path} exists.")
         with open(relative_path, 'r') as stream:
             data = yaml.safe_load(stream)
-            keys = ['angular_speed', 'blade_radius', 'chord_reference', 'operating_reynolds',
-                    'optimal_speed', 'rpm', 'tip_speed_ratio', 'no_design_stations', 'initial_stage_pctg']
+            keys = ['angular_speed', 'blade_radius', 'radius_hub', 'chord_reference', 'operating_reynolds',
+                    'optimal_speed', 'rpm', 'tip_speed_ratio', 'no_design_stations', 'initial_stage_pctg', 'no_blades']
             if all(key in data for key in keys):
                 print(f"Operative State File: {relative_path} is Correct.")
             else:
