@@ -20,6 +20,7 @@ def optimal_blade_chord_twist(hydrofoils: dict, fluid_properties: dict, operativ
 
     # Defining the list of design points along the blade (based on the local radius).
     design_points = np.linspace(initial_point, final_point, number_points)
+    design_points[-1] = design_points[-1] * 0.975
     design_hydrofoils = list(hydrofoils.keys())
 
     # Check if the number of design points matches the number of hydrofoils.
@@ -30,8 +31,9 @@ def optimal_blade_chord_twist(hydrofoils: dict, fluid_properties: dict, operativ
 
     # Defining a list where the optimal chord will be stored.
     chords = []
+    betas = []
 
-    for i in range(4,6):
+    for i in range(len(design_points)):
         # Extracting the hydrofoil data.
         hydrofoil = design_hydrofoils[i]
         local_radius = design_points[i]
@@ -122,4 +124,5 @@ def optimal_blade_chord_twist(hydrofoils: dict, fluid_properties: dict, operativ
                 b = b_new
             chord = chord + 0.00001
         chords.append(chord)
-    return chords
+        betas.append(beta)
+    return chords, betas

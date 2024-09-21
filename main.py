@@ -28,12 +28,8 @@ operative_state = operative_state_data_check(relative_path=PATH_OPERATIVE_STATE)
 [hydrofoils, polars_obj, airfoils_obj] = create_objects(files=files, path=absolute_path_hydrofoils)  # Create hydrofoils, polars and airfoils objects.
 
 # ================================= PART 2A: BLADE CHORD AND TWIST DESIGN ==============================================================================
-optimal_chord = optimal_blade_chord_twist(hydrofoils=hydrofoils, fluid_properties=fluid_properties, operative_state=operative_state)
+optimal_chord, optimal_beta = optimal_blade_chord_twist(hydrofoils=hydrofoils, fluid_properties=fluid_properties, operative_state=operative_state)
 
 # ================================= PART 2B: AIRFOIL DATA EXTRAPOLATION ================================================================================
 hydrofoils_extrapolated = extrapolate_airfoil_data(airfoils=airfoils_obj)                                     # Extrapolate the hydrofoil data.
 save_aerodyn_files(hydrofoils_extrapolated=hydrofoils_extrapolated, folder_name=HYDROFOILS_EXT_FOLDER_NAME)   # Save the extrapolated hydrofoil data.
-
-
-
-                                                
