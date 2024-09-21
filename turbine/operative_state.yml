@@ -1,0 +1,13 @@
+optimal_speed: 1.5
+tip_speed_ratio: 5.0
+angular_speed: 15
+rpm: 143.239
+blade_radius: 0.5
+no_blades: 3
+radius_hub_pctg: 0.20
+initial_point_pctg: 0.30
+final_point_pctg: 1.00
+no_design_stations: 8
+operative_reynolds: 298000
+
+
