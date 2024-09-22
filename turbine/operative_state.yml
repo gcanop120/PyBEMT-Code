@@ -7,7 +7,7 @@ no_blades: 3
 radius_hub_pctg: 0.20
 initial_point_pctg: 0.30
 final_point_pctg: 1.00
-no_design_stations: 8
+no_design_points: 8
 operative_reynolds: 298000
 
 
