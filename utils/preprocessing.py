@@ -63,7 +63,7 @@ def fluid_properties_data_check(path: str):
     else:
         print(f"File {path} does not exist. Please check the path. (x)")
         return None
-    return path
+    return data
 
 
 def operative_state_data_check(path: str):
@@ -92,4 +92,20 @@ def operative_state_data_check(path: str):
     else:
         print(f"File {path} does not exist. Please check the path. (x)")
         return None
-    return path
+    return data
+
+
+def hydrofoils_data_rearrange(files: list, path: str):
+    """
+    Function for rearranging the hydrofoil data files into a single dictionary data structure.
+    :param files: list, list of the files found in the folder.
+    :param path: str, path to the folder containing the hydrofoil data files.
+    :return: hydrofoil_data: dict, dictionary containing the hydrofoil data.
+    """
+    hydrofoils = {}
+    for file in files:
+        with open(f"{path}/{file}", 'r') as f:
+            data = yaml.safe_load(f)
+            hydrofoil = data['hydrofoil']
+            hydrofoils[hydrofoil] = data
+    return hydrofoils
