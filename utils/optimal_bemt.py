@@ -204,19 +204,27 @@ class OptimalRotor:
             tang_velocities.append(U_tang)
             force_x_coeff.append(C_x)
             force_y_coeff.append(C_y)
+        # TODO: Create a function to transform a list of lists into a single list.
+        # TODO: Check why some variables are stored as lists of lists.
         self.optimal_chord = chords
         self.optimal_betas = betas
+        self.optimal_betas = [item for sublist in self.optimal_betas for item in sublist]
         self.optimal_phis = phis
         self.optimal_alphas = alphas
         self.total_losses = losses
+        self.total_losses = [item for sublist in self.total_losses for item in sublist]
         self.solidity = blade_solidity
         self.disk_velocities = disk_velocities
+        self.disk_velocities = [item for sublist in self.disk_velocities for item in sublist]
         self.tang_velocities = tang_velocities
+        self.tang_velocities = [item for sublist in self.tang_velocities for item in sublist]
         self.force_x_coeff = force_x_coeff
+        self.force_x_coeff = [item for sublist in self.force_x_coeff for item in sublist]
         self.force_y_coeff = force_y_coeff
+        self.force_y_coeff = [item for sublist in self.force_y_coeff for item in sublist]
         return None
 
-    def save_properties(self):
+    def save_properties(self, path: str):
         """
         Function to save the properties of the optimal rotor object into a pd Dataframe.
         """
@@ -232,5 +240,5 @@ class OptimalRotor:
             'Axial Force Coefficient [-]': self.force_x_coeff,
             'Tangential Force Coefficient [-]': self.force_y_coeff
         })
-        properties.to_csv("resources/optimal_rotor_properties.csv", index=False)
+        properties.to_csv(path_or_buf=f"{path}/optimal_rotor_properties.csv", index=False)
         return None

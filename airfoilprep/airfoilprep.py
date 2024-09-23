@@ -514,7 +514,7 @@ class Polar(object):
         return figs
 
 
-class Airfoil(object):
+class Hydrofoil(object):
     """A collection of Polar objects at different Reynolds numbers
 
     """
@@ -547,7 +547,7 @@ class Airfoil(object):
 
         Returns
         -------
-        obj : Airfoil
+        obj : Hydrofoil
 
         """
         # initialize
@@ -633,14 +633,14 @@ class Airfoil(object):
 
         Parameters
         ----------
-        other : Airfoil
+        other : Hydrofoil
             other airfoil to blend with
         weight : float
             blending parameter between 0 and 1.  0 returns self, whereas 1 returns other.
 
         Returns
         -------
-        obj : Airfoil
+        obj : Hydrofoil
             a blended Airfoil object
 
         Notes
@@ -664,7 +664,7 @@ class Airfoil(object):
             polars[i] = p1.blend(p2, weight)
 
 
-        return Airfoil(polars)
+        return Hydrofoil(polars)
 
 
     def correction3D(self, r_over_R, chord_over_r, tsr, alpha_max_corr=30,
@@ -688,7 +688,7 @@ class Airfoil(object):
 
         Returns
         -------
-        airfoil : Airfoil
+        airfoil : Hydrofoil
             airfoil with 3-D corrections
 
         See Also
@@ -702,7 +702,7 @@ class Airfoil(object):
         for idx, p in enumerate(self.polars):
             polars[idx] = p.correction3D(r_over_R, chord_over_r, tsr, alpha_max_corr, alpha_linear_min, alpha_linear_max)
 
-        return Airfoil(polars)
+        return Hydrofoil(polars)
 
 
     def extrapolate(self, cdmax, AR=None, cdmin=0.001):
@@ -719,7 +719,7 @@ class Airfoil(object):
 
         Returns
         -------
-        airfoil : Airfoil
+        airfoil : Hydrofoil
             airfoil with +/-180 degree extensions
 
         See Also
@@ -733,7 +733,7 @@ class Airfoil(object):
         for idx, p in enumerate(self.polars):
             polars[idx] = p.extrapolate(cdmax, AR, cdmin)
 
-        return Airfoil(polars)
+        return Hydrofoil(polars)
 
 
 
@@ -763,7 +763,7 @@ class Airfoil(object):
             cm = np.interp(alpha, p.alpha, p.cm)
             polars[idx] = self.polar_type(p.Re, alpha, cl, cd, cm)
 
-        return Airfoil(polars)
+        return Hydrofoil(polars)
 
 
 
@@ -1019,7 +1019,7 @@ if __name__ == "__main__":
             name, ext = os.path.splitext(args.src_file)
             fileOut = name + "_3D" + ext
 
-        af = Airfoil.initFromAerodynFile(args.src_file)
+        af = Hydrofoil.initFromAerodynFile(args.src_file)
         floats = [float(var) for var in args.stall3D]
         af3D = af.correction3D(*floats)
 
@@ -1060,7 +1060,7 @@ if __name__ == "__main__":
             name, ext = os.path.splitext(args.src_file)
             fileOut = name + "_extrap" + ext
 
-        af = Airfoil.initFromAerodynFile(args.src_file)
+        af = Hydrofoil.initFromAerodynFile(args.src_file)
 
         afext = af.extrapolate(float(args.extrap[0]))
 
@@ -1109,8 +1109,8 @@ if __name__ == "__main__":
             name2, ext = os.path.splitext(os.path.basename(args.blend[0]))
             fileOut = name1 + "+" + name2 + "_blend" + args.blend[1] + ext
 
-        af1 = Airfoil.initFromAerodynFile(args.src_file)
-        af2 = Airfoil.initFromAerodynFile(args.blend[0])
+        af1 = Hydrofoil.initFromAerodynFile(args.src_file)
+        af2 = Hydrofoil.initFromAerodynFile(args.blend[0])
         afOut = af1.blend(af2, float(args.blend[1]))
 
         if args.common:

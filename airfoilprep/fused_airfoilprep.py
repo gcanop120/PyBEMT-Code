@@ -1,6 +1,6 @@
 import numpy as np
 from openmdao.api import Component, Group, ParallelGroup
-from airfoilprep import Polar, Airfoil
+from airfoilprep import Polar, Hydrofoil
 
 
 class AirfoilPreppyPolarExtrapolator(Component):
@@ -134,7 +134,7 @@ class AirfoilPreppyPolarExtrapolator(Component):
                 '''
 
             # create airfoil object
-            af = Airfoil(re_polars)
+            af = Hydrofoil(re_polars)
             af.interpToCommonAlpha()
             af.writeToAerodynFile(af_name + '.dat')
 
