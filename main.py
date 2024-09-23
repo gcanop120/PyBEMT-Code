@@ -12,6 +12,7 @@ from utils.extrapolation import create_objects
 from utils.extrapolation import extrapolate_hydrofoil_data
 from utils.extrapolation import save_aerodyn_files
 from utils.preprocessing import hydrofoils_ext_data_rearrange
+from utils.evaluation_bemt import StandardRotor
 
 # SECTION 1. Defining the paths of the required data files.
 HYDROFOIL_FOLDER_PATH = "hydrofoils"
@@ -34,8 +35,8 @@ optimal_rotor = OptimalRotor(fluid_properties=file_fluid_properties,            
                              operative_state=file_operative_state,                  # OptimalRotor object requires the fluid properties
                              hydrofoils=file_hydrofoils)                            # and operative state data to be defined.
 optimal_rotor.get_design_points()                                                   # Define the design points.
-# optimal_rotor.get_optimal_chord_twist(path=POLAR_PLOTS_FOLDER_PATH)                 # Compute the optimal chord and twist.
-# optimal_rotor.save_properties(path=OPTIMAL_ROTOR_FOLDER_PATH)                       # Save the optimal rotor properties.
+optimal_rotor.get_optimal_chord_twist(path=POLAR_PLOTS_FOLDER_PATH)                 # Compute the optimal chord and twist.
+optimal_rotor.save_properties(path=OPTIMAL_ROTOR_FOLDER_PATH)                       # Save the optimal rotor properties.
 
 # SECTION 4. Once the optimal chord and twist angle are computed, it is required to extrapolate
 # the hydrofoil data to the entire rotor blade possible configurations. This is done by using the
@@ -47,3 +48,11 @@ save_aerodyn_files(hydrofoils_extra=hydrofoils_obj_extrapolated, path=HYDROFOIL_
 # SECTION 5. The hydrofoil extrapolated data is now ready to be used for the BEMT analysis.
 # The hydrofoil extrapolated data is rearranged into a single dictionary data structure for the analysis.
 files_hydrofoils_extrapolated = hydrofoils_ext_data_rearrange(hydrofoils_ext=hydrofoils_obj_extrapolated)
+
+# SECTION 6. The BEMT analysis is performed using the StandardRotor object.
+standard_rotor = StandardRotor(fluid_properties=file_fluid_properties,
+                               operative_state=file_operative_state,
+                               hydrofoils=files_hydrofoils_extrapolated,
+                               blade_chord=optimal_rotor.optimal_chord,
+                               blade_twist=optimal_rotor.optimal_betas,
+                               tip_speed_ratio=5)
