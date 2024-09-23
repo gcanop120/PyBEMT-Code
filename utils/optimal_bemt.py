@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 from tqdm import tqdm
@@ -213,4 +214,23 @@ class OptimalRotor:
         self.tang_velocities = tang_velocities
         self.force_x_coeff = force_x_coeff
         self.force_y_coeff = force_y_coeff
+        return None
+
+    def save_properties(self):
+        """
+        Function to save the properties of the optimal rotor object into a pd Dataframe.
+        """
+        properties = pd.DataFrame({
+            'Design Points [m]': self.design_points,
+            'Optimal Chord [m]': self.optimal_chord,
+            'Optimal Twist Angle [deg]': self.optimal_betas,
+            'Optimal Angle of Attack [deg]': self.optimal_alphas,
+            'Total Losses [-]': self.total_losses,
+            'Blade Solidity [-]': self.solidity,
+            'Disk Velocities [m/s]': self.disk_velocities,
+            'Tangential Velocities [m/s]': self.tang_velocities,
+            'Axial Force Coefficient [-]': self.force_x_coeff,
+            'Tangential Force Coefficient [-]': self.force_y_coeff
+        })
+        properties.to_csv("resources/optimal_rotor_properties.csv", index=False)
         return None

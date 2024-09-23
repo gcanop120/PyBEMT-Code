@@ -27,3 +27,4 @@ file_operative_state = operative_state_data_check(path=OPERATIVE_STATE_FILE_PATH
 optimal_rotor = OptimalRotor(fluid_properties=file_fluid_properties, operative_state=file_operative_state, hydrofoils=file_hydrofoils)
 optimal_rotor.get_design_points()
 optimal_rotor.get_optimal_chord_twist(path=POLAR_PLOTS_FOLDER_PATH)
+optimal_rotor.save_properties()
