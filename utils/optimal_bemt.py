@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
 
@@ -21,8 +22,16 @@ class OptimalRotor:
         self.no_design_points = operative_state['no_design_points']
         self.hydrofoils_data = hydrofoils
         self.optimal_chord = []
-        self.optimal_twist = []
+        self.optimal_phis = []
+        self.optimal_alphas = []
+        self.optimal_betas = []
         self.design_points = []
+        self.total_losses = []
+        self.solidity = []
+        self.disk_velocities = []
+        self.tang_velocities = []
+        self.force_x_coeff = []
+        self.force_y_coeff = []
 
     def get_design_points(self):
         """
@@ -60,10 +69,18 @@ class OptimalRotor:
 
         # Defining lists where the optimal chord and twist angle will be stored.
         chords = []
-        twists = []
+        phis = []
+        alphas = []
+        betas = []
+        losses = []
+        blade_solidity = []
+        disk_velocities = []
+        tang_velocities = []
+        force_x_coeff = []
+        force_y_coeff = []
 
         # Initialize the iterative process to compute the optimal chord and twist angle.
-        for i in range(len(design_hydrofoils)):
+        for i in tqdm(range(len(design_hydrofoils))):
             # Extracting the polar data for the selected hydrofoil.
             hydrofoil = design_hydrofoils[i]
             local_radius = design_points[i]
@@ -105,7 +122,7 @@ class OptimalRotor:
 
             # Initialize the chord and axial and tangential induction factors.
             chord = 0.01 * self.blade_radius
-            beta = 0.0
+            [beta, phi, F_total, sigma_r, U_disk, U_tang, C_x, C_y] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
             a = 0.0
             b = 0.0
             # Initialize the iterative process to compute the optimal chord and twist angle.
@@ -157,11 +174,19 @@ class OptimalRotor:
                         return variable_b / (1 + variable_b) - (sigma_r * C_y) / (4 * F_total * np.sin(phi_radians) * np.cos(phi_radians))
 
                     # Compute the axial and tangential induction factors.
+                    # TODO: Check why the type checker is not working.
+                    # noinspection PyTypeChecker
                     a_new = fsolve(fa, a)
+                    # TODO: Check why the type checker is not working.
+                    # noinspection PyTypeChecker
                     b_new = fsolve(fb, b)
 
                     # Compute the axial and tangential induction errors.
+                    # TODO: Check why the type checker is not working.
+                    # noinspection PyTypeChecker
                     error_ind_axial = abs(float(a_new) - a)
+                    # TODO: Check why the type checker is not working.
+                    # noinspection PyTypeChecker
                     error_ind_tangential = abs(float(b_new) - b)
 
                     # Update the axial and tangential induction factors.
@@ -169,7 +194,23 @@ class OptimalRotor:
                     b = b_new
                 chord = chord + 0.00001
             chords.append(chord)
-            twists.append(beta)
+            betas.append(beta)
+            phis.append(phi)
+            alphas.append(alpha)
+            losses.append(F_total)
+            blade_solidity.append(sigma_r)
+            disk_velocities.append(U_disk)
+            tang_velocities.append(U_tang)
+            force_x_coeff.append(C_x)
+            force_y_coeff.append(C_y)
         self.optimal_chord = chords
-        self.optimal_twist = twists
+        self.optimal_betas = betas
+        self.optimal_phis = phis
+        self.optimal_alphas = alphas
+        self.total_losses = losses
+        self.solidity = blade_solidity
+        self.disk_velocities = disk_velocities
+        self.tang_velocities = tang_velocities
+        self.force_x_coeff = force_x_coeff
+        self.force_y_coeff = force_y_coeff
         return None
