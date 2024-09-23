@@ -8,6 +8,11 @@ from scipy.optimize import fsolve
 
 
 class OptimalRotor:
+    """
+    Class to create the optimal rotor object for the ocean current turbine blade design.
+    The optimal rotor object contains the fluid properties, operative state, and hydrofoil data.
+    The object should be used just for the optimal calculation of the blade chord and twist angle.
+    """
     def __init__(self, fluid_properties: dict, operative_state: dict, hydrofoils: dict):
         self.density = fluid_properties['density']
         self.kinematic_viscosity = fluid_properties['kinematic_viscosity']

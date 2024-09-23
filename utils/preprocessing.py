@@ -109,3 +109,21 @@ def hydrofoils_data_rearrange(files: list, path: str):
             hydrofoil = data['hydrofoil']
             hydrofoils[hydrofoil] = data
     return hydrofoils
+
+
+def hydrofoils_ext_data_rearrange(hydrofoils_ext: dict):
+    """
+    Function for rearranging the extrapolated hydrofoil data files into a single dictionary data structure.
+    :param hydrofoils_ext: dict, dictionary containing the extrapolated hydrofoil data as Hydrofoil objects.
+    :return: hydrofoil_data: dict, dictionary containing the hydrofoil data.
+    """
+    hydrofoils_names = list(hydrofoils_ext.keys())
+    hydrofoils_extended = {}
+    for i in range(len(hydrofoils_names)):
+        alpha = hydrofoils_ext[hydrofoils_names[i]].polars[0].alpha
+        cl = hydrofoils_ext[hydrofoils_names[i]].polars[0].cl
+        cd = hydrofoils_ext[hydrofoils_names[i]].polars[0].cd
+        cm = hydrofoils_ext[hydrofoils_names[i]].polars[0].cm
+        reynolds = hydrofoils_ext[hydrofoils_names[i]].polars[0].Re
+        hydrofoils_extended[hydrofoils_names[i]] = {'alpha': alpha, 'cl': cl, 'cd': cd, 'cm': cm, 'reynolds': reynolds}
+    return hydrofoils_extended
