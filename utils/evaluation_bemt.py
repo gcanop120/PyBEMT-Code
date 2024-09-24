@@ -42,6 +42,7 @@ class StandardRotor:
         self.omega = self.optimal_speed * self.tip_speed_ratio / self.blade_radius
         # Define polar data of the hydrofoils.
         self.hydrofoils = hydrofoils
+        self.W_velocities = []
 
     def evaluate_bemt(self):
         """
@@ -50,6 +51,7 @@ class StandardRotor:
         """
         name_hydrofoil = list(self.hydrofoils.keys())
         AoA = []
+        W_velocity = []
         for i in tqdm(range(len(name_hydrofoil))):
             # Basic Hydrofoil Data Information (local radius, alpha, cl, cd).
             hydrofoil_data = self.hydrofoils[name_hydrofoil[i]]
@@ -118,5 +120,10 @@ class StandardRotor:
 
                 a = a_new
                 b = b_new
+
+                W = np.sqrt((U_disk * (1 - a)) ** 2 + (U_tang * (1 + b)) ** 2)
             AoA.append(alpha)
-        return AoA
+            W_velocity.append(W)
+            self.W_velocities = W_velocity
+            self.W_velocities = [item for sublist in self.W_velocities for item in sublist]
+        return None

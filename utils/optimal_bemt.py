@@ -198,7 +198,7 @@ class OptimalRotor:
                     # Update the axial and tangential induction factors.
                     a = a_new
                     b = b_new
-                chord = chord + 0.00001
+                chord = chord + 0.0001
             chords.append(chord)
             betas.append(beta)
             phis.append(phi)
