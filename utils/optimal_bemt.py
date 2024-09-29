@@ -72,7 +72,7 @@ class OptimalRotor:
         design_points = self.design_points
         design_points[-1] = design_points[-1] * 0.975
         design_hydrofoils = list(self.hydrofoils_data.keys())
-        # Invert design_hydrofoils list
+        # TODO: Verify that the order of the hydrofoils is correct based on the hydrofoil positions along the blade.
         design_hydrofoils = design_hydrofoils[::-1]
 
         # Defining lists where the optimal chord and twist angle will be stored.

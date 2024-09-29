@@ -56,4 +56,4 @@ standard_rotor = StandardRotor(fluid_properties=file_fluid_properties,
                                blade_chord=optimal_rotor.optimal_chord,
                                blade_twist=optimal_rotor.optimal_betas,
                                tip_speed_ratio=5)
-standard_rotor.evaluate_bemt()
+aoa = standard_rotor.evaluate_bemt()

@@ -43,6 +43,7 @@ class StandardRotor:
         # Define polar data of the hydrofoils.
         self.hydrofoils = hydrofoils
         self.W_velocities = []
+        self.AoA = []
 
     def evaluate_bemt(self):
         """
@@ -50,6 +51,8 @@ class StandardRotor:
         The iterative process is computed just for one specific Tip Speed Ratio (TSR).
         """
         name_hydrofoil = list(self.hydrofoils.keys())
+        # Invert name_hydrofoil list.
+        name_hydrofoil = name_hydrofoil[::-1]
         AoA = []
         W_velocity = []
         for i in tqdm(range(len(name_hydrofoil))):
@@ -126,4 +129,4 @@ class StandardRotor:
             W_velocity.append(W)
             self.W_velocities = W_velocity
             self.W_velocities = [item for sublist in self.W_velocities for item in sublist]
-        return None
+        return AoA
