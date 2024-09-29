@@ -72,6 +72,8 @@ class OptimalRotor:
         design_points = self.design_points
         design_points[-1] = design_points[-1] * 0.975
         design_hydrofoils = list(self.hydrofoils_data.keys())
+        # Invert design_hydrofoils list
+        design_hydrofoils = design_hydrofoils[::-1]
 
         # Defining lists where the optimal chord and twist angle will be stored.
         chords = []
@@ -198,7 +200,7 @@ class OptimalRotor:
                     # Update the axial and tangential induction factors.
                     a = a_new
                     b = b_new
-                chord = chord + 0.0001
+                chord = chord + 0.00001
             chords.append(chord)
             betas.append(beta)
             phis.append(phi)
@@ -215,6 +217,7 @@ class OptimalRotor:
         self.optimal_betas = betas
         self.optimal_betas = [item for sublist in self.optimal_betas for item in sublist]
         self.optimal_phis = phis
+        self.optimal_phis = [item for sublist in self.optimal_phis for item in sublist]
         self.optimal_alphas = alphas
         self.total_losses = losses
         self.total_losses = [item for sublist in self.total_losses for item in sublist]
