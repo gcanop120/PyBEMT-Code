@@ -10,6 +10,7 @@ class StandardRotor:
     used for the BEMT analysis, then it is required to provide the geometrical parameters
     (i.e. chord and twist) and the fluid properties and operative state data.
     """
+
     def __init__(self, fluid_properties: dict, operative_state: dict, hydrofoils: dict,
                  blade_chord: list, blade_twist: list, tip_speed_ratio: float):
         """
@@ -44,6 +45,7 @@ class StandardRotor:
         self.hydrofoils = hydrofoils
         self.W_velocities = []
         self.AoA = []
+        self.induction_axial = []
 
     def evaluate_bemt(self):
         """
@@ -55,6 +57,7 @@ class StandardRotor:
         name_hydrofoil = name_hydrofoil[::-1]
         AoA = []
         W_velocity = []
+        induction_axial = []
         for i in tqdm(range(len(name_hydrofoil))):
             # Basic Hydrofoil Data Information (local radius, alpha, cl, cd).
             hydrofoil_data = self.hydrofoils[name_hydrofoil[i]]
@@ -87,7 +90,7 @@ class StandardRotor:
                 phi = np.rad2deg(np.arctan(U_disk / U_tang))
                 phi_radians = np.deg2rad(phi)
                 beta = self.blade_twist[i]
-                alpha = phi-self.blade_twist[i]
+                alpha = phi - self.blade_twist[i]
 
                 # Compute the blade solidity at local radius.
                 sigma_r = Nb * self.blade_chord[i] / (2 * np.pi * radius)
@@ -127,6 +130,21 @@ class StandardRotor:
                 W = np.sqrt((U_disk * (1 - a)) ** 2 + (U_tang * (1 + b)) ** 2)
             AoA.append(alpha)
             W_velocity.append(W)
+            induction_axial.append(a)
             self.W_velocities = W_velocity
             self.W_velocities = [item for sublist in self.W_velocities for item in sublist]
-        return AoA
+            self.AoA = AoA
+            self.AoA = [item for sublist in self.AoA for item in sublist]
+            self.induction_axial = induction_axial
+            self.induction_axial = [item for sublist in self.induction_axial for item in sublist]
+        return
+
+    def evaluate_performance(self, interpolation_range: int = 70):
+        """
+        Function to evaluate the performance of the StandardRotor object.
+        :param interpolation_range: int, number of points to interpolate the performance data.
+        """
+        # Compute interpolated variables.
+        segmented_radius = np.linspace(self.initial_point_pctg * self.blade_radius, self.blade_radius, interpolation_range+1)
+        blades_loads_a = np.interp(segmented_radius, self.radial_design_points, self.induction_axial)
+        return blades_loads_a
