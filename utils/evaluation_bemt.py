@@ -2,6 +2,7 @@ import numpy as np
 from tqdm import tqdm
 from scipy.interpolate import make_interp_spline
 from scipy.optimize import fsolve
+import scipy.integrate as integrate
 
 
 class StandardRotor:
@@ -46,6 +47,11 @@ class StandardRotor:
         self.W_velocities = []
         self.AoA = []
         self.induction_axial = []
+        self.induction_tangential = []
+        self.total_losses = []
+        self.coefficient_x = []
+        self.coefficient_y = []
+        self.phi_angle = []
 
     def evaluate_bemt(self):
         """
@@ -58,6 +64,11 @@ class StandardRotor:
         AoA = []
         W_velocity = []
         induction_axial = []
+        induction_tangential = []
+        total_losses = []
+        cx_coefficient = []
+        cy_coefficient = []
+        phi_angle = []
         for i in tqdm(range(len(name_hydrofoil))):
             # Basic Hydrofoil Data Information (local radius, alpha, cl, cd).
             hydrofoil_data = self.hydrofoils[name_hydrofoil[i]]
@@ -131,12 +142,27 @@ class StandardRotor:
             AoA.append(alpha)
             W_velocity.append(W)
             induction_axial.append(a)
+            induction_tangential.append(b)
+            total_losses.append(F_total)
+            cx_coefficient.append(C_x)
+            cy_coefficient.append(C_y)
+            phi_angle.append(phi)
             self.W_velocities = W_velocity
             self.W_velocities = [item for sublist in self.W_velocities for item in sublist]
             self.AoA = AoA
             self.AoA = [item for sublist in self.AoA for item in sublist]
             self.induction_axial = induction_axial
             self.induction_axial = [item for sublist in self.induction_axial for item in sublist]
+            self.induction_tangential = induction_tangential
+            self.induction_tangential = [item for sublist in self.induction_tangential for item in sublist]
+            self.total_losses = total_losses
+            self.total_losses = [item for sublist in self.total_losses for item in sublist]
+            self.coefficient_x = cx_coefficient
+            self.coefficient_x = [item for sublist in self.coefficient_x for item in sublist]
+            self.coefficient_y = cy_coefficient
+            self.coefficient_y = [item for sublist in self.coefficient_y for item in sublist]
+            self.phi_angle = phi_angle
+            self.phi_angle = [item for sublist in self.phi_angle for item in sublist]
         return
 
     def evaluate_performance(self, interpolation_range: int = 70):
@@ -145,6 +171,22 @@ class StandardRotor:
         :param interpolation_range: int, number of points to interpolate the performance data.
         """
         # Compute interpolated variables.
-        segmented_radius = np.linspace(self.initial_point_pctg * self.blade_radius, self.blade_radius, interpolation_range+1)
+        segmented_radius = np.linspace(self.initial_point_pctg * self.blade_radius, self.blade_radius, interpolation_range + 1)
         blades_loads_a = np.interp(segmented_radius, self.radial_design_points, self.induction_axial)
-        return blades_loads_a
+        blades_loads_b = np.interp(segmented_radius, self.radial_design_points, self.induction_tangential)
+        blades_loads_f_total = np.interp(segmented_radius, self.radial_design_points, self.total_losses)
+        blades_loads_w = np.interp(segmented_radius, self.radial_design_points, self.W_velocities)
+        blades_loads_cx = np.interp(segmented_radius, self.radial_design_points, self.coefficient_x)
+        blades_loads_cy = np.interp(segmented_radius, self.radial_design_points, self.coefficient_y)
+        blades_loads_chord = np.interp(segmented_radius, self.radial_design_points, self.blade_chord)
+        blades_loads_phi = np.interp(segmented_radius, self.radial_design_points, self.phi_angle)
+        blade_loads_thrust = []
+        for i in range(len(segmented_radius)-1):
+            lower_bound = segmented_radius[i]
+            upper_bound = segmented_radius[i+1]
+            thrust = integrate.quad(lambda r: 4 * np.pi * r * self.density * self.optimal_speed**2 * blades_loads_a[i] * (1-blades_loads_a[i]) * blades_loads_f_total[i],
+                                    lower_bound, upper_bound)
+            blade_loads_thrust.append(thrust[0])
+        # Sum all elements of the list in blade_loads_thrust.
+        total_thrust = sum(blade_loads_thrust)
+        return
