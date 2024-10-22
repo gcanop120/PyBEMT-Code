@@ -181,12 +181,17 @@ class StandardRotor:
         blades_loads_chord = np.interp(segmented_radius, self.radial_design_points, self.blade_chord)
         blades_loads_phi = np.interp(segmented_radius, self.radial_design_points, self.phi_angle)
         blade_loads_thrust = []
+        blade_loads_power = []
         for i in range(len(segmented_radius)-1):
             lower_bound = segmented_radius[i]
             upper_bound = segmented_radius[i+1]
             thrust = integrate.quad(lambda r: 4 * np.pi * r * self.density * self.optimal_speed**2 * blades_loads_a[i] * (1-blades_loads_a[i]) * blades_loads_f_total[i],
-                                    lower_bound, upper_bound)
+                                    lower_bound.astype(float), upper_bound.astype(float))
             blade_loads_thrust.append(thrust[0])
+            power = integrate.quad(lambda r: 4 * np.pi * r**3 * self.density * self.optimal_speed * self.omega * blades_loads_b[i] * (1-blades_loads_a[i]) * blades_loads_f_total[i],
+                                    lower_bound.astype(float), upper_bound.astype(float))
+            blade_loads_power.append(power[0])
         # Sum all elements of the list in blade_loads_thrust.
         total_thrust = sum(blade_loads_thrust)
+        total_power = sum(blade_loads_power)
         return
