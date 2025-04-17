@@ -55,6 +55,18 @@ standard_rotor = StandardRotor(fluid_properties=file_fluid_properties,
                                hydrofoils=files_hydrofoils_extrapolated,
                                blade_chord=optimal_rotor.optimal_chord,
                                blade_twist=optimal_rotor.optimal_betas,
-                               tip_speed_ratio=5)
+                               tip_speed_ratio=7)
 standard_rotor.evaluate_bemt()
 pivot = standard_rotor.evaluate_performance()
+
+# Create a dictionary with the results of induction axial, induction tangential and total_losses with index radial_design_points to be stored as a csv
+results = {
+    "induction_axial": standard_rotor.induction_axial,
+    "induction_tangential": standard_rotor.induction_tangential,
+    "total_losses": standard_rotor.total_losses,
+    "radial_design_points": standard_rotor.radial_design_points
+}
+# Save the results as a csv file
+import pandas as pd
+df = pd.DataFrame(results)
+df.to_csv(f"resources/parameters_operative_{standard_rotor.tip_speed_ratio}_.csv", index=False)
